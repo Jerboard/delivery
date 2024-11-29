@@ -1,0 +1,9 @@
+aiogram
+APScheduler
+asyncpg
+gspread
+python-dotenv
+pytz
+redis
+SQLAlchemy
+uvloop
