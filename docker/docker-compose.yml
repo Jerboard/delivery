@@ -67,7 +67,7 @@ services:
     volumes:
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../nginx/conf.d/base.conf:/etc/nginx/conf.d/base.conf
-      - ../delivery_admin/staticfiles:/var/html/static/
+      - ../delivery_admin/static:/var/html/static/
       - ../delivery_admin/staticfiles:/var/html/staticfiles/
       - ../delivery_admin/media:/var/html/media/
       - ../logs/nginx:/var/log/nginx
