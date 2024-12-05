@@ -9,6 +9,7 @@ services:
       - ../data:/var/lib/postgresql/data
 #      - ../users_dlv.csv:/users_dlv.csv
       - ../users_dlv.csv:/var/lib/pgadmin/storage/delivery_admin.com/users_dlv.csv
+    restart: unless-stopped
     env_file:
       - .env
 
@@ -21,6 +22,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ../users_dlv.csv:/users_dlv.csv
+    restart: unless-stopped
     env_file:
       - .env
 
@@ -35,6 +37,7 @@ services:
     volumes:
       - ../bot:/app
       - ../logs/bot:/app/logs/
+    restart: unless-stopped
     depends_on:
       - db
     env_file:
@@ -50,6 +53,7 @@ services:
     volumes:
       - ../delivery_admin:/app
       - ../logs/django:/app/logs/
+    restart: unless-stopped
     ports:
       - "8000:8000"
     depends_on:
@@ -71,6 +75,7 @@ services:
       - ../delivery_admin/staticfiles:/var/html/staticfiles/
       - ../delivery_admin/media:/var/html/media/
       - ../logs/nginx:/var/log/nginx
+    restart: unless-stopped
     depends_on:
       - web
 
