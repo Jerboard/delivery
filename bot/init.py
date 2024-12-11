@@ -24,13 +24,13 @@ try:
 except:
     pass
 
-logging.warning(f'>>>> {Config.redis_host} {Config.redis_port}')
 redis_aiogram = Redis(host=Config.redis_host, port=Config.redis_port, db=0)
 storage = RedisStorage(redis=redis_aiogram)
 
 
 loop = asyncio.get_event_loop()
-dp = Dispatcher(storage=storage, loop=loop)
+# dp = Dispatcher(storage=storage, loop=loop)
+dp = Dispatcher(loop=loop)
 bot = Bot(Config.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 
