@@ -6,10 +6,12 @@ from bot_admin import models as md
 
 @admin.register(md.OrderTable)
 class ViewOrderTable(admin.ModelAdmin):
-    list_display = ['row_num', 'n', 'o', 'm', 'x', 'f', 'g']
+    list_display = ['row_num', 'n', 'o', 'm', 'x', 'f', 'g', 'ac']
     search_fields = ['n', 'o', 'row_num']
-    list_filter = ('g', 'f',)
+    list_filter = ('g', 'f', 'ac')
     ordering = ['-row_num']
+    list_editable = ['g']
+
     # ordering_fields = []
 
     def get_form(self, request, obj=None, **kwargs):

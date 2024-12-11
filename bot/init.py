@@ -3,6 +3,7 @@ from aiogram.types.bot_command import BotCommand
 from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -23,9 +24,13 @@ try:
 except:
     pass
 
+logging.warning(f'>>>> {Config.redis_host} {Config.redis_port}')
+redis_aiogram = Redis(host=Config.redis_host, port=Config.redis_port, db=0)
+storage = RedisStorage(redis=redis_aiogram)
+
 
 loop = asyncio.get_event_loop()
-dp = Dispatcher()
+dp = Dispatcher(storage=storage, loop=loop)
 bot = Bot(Config.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 

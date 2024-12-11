@@ -59,7 +59,7 @@ class OrderTable(models.Model):
     z = models.CharField('Z Цена бланка', max_length=255, null=True, blank=True)
     aa = models.CharField('AA Итого с клиента', max_length=255, null=True, blank=True)
     ab = models.CharField('AB Примечания', max_length=255, null=True, blank=True)
-    ac = models.CharField('AC Курьерская', max_length=255, null=True, blank=True)
+    ac = models.CharField('AC Курьерская', max_length=255, null=True, blank=True, choices=mp.company_dlv)
     updated = models.BooleanField('Обновлено', default=False)
     time_update = models.DateTimeField('', auto_now_add=True)
     type_update = models.CharField('Тип обновления', max_length=255, default=enums.TypeOrderUpdate.ADD.value)

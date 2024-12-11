@@ -80,6 +80,12 @@ services:
       - web
 
 
+  redis:
+    image: redis:latest
+    container_name: redis_delivery
+    ports:
+      - "6379:6379"
+
 volumes:
   pgadmin_data:
 

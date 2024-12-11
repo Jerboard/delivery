@@ -27,6 +27,9 @@ class Config:
     db_password = os.getenv('POSTGRES_PASSWORD')
     db_url = f'postgresql+asyncpg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
 
+    redis_host = os.getenv('REDIS_HOST')
+    redis_port = os.getenv('REDIS_PORT')
+
     report_sheet_num = 6
     day_form = '%d.%m'
     datetime_form = '%d.%m.%Y %H:%M'
