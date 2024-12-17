@@ -1,0 +1,23 @@
+name: Delivery update
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: 31.129.101.10
+        username: root
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /home/infinity/docker
+          git pull origin main
+          docker-compose down
+          docker-compose up -d

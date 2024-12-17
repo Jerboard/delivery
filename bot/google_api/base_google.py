@@ -9,7 +9,7 @@ from config import Config
 from init import bot, log_error
 # from utils.base_utils import get_dlv_name_dict, get_work_orders_list
 from data.base_data import order_status_data, company_dlv, company_dlv
-from enums import TypeOrderUpdate, UserRole, OrderStatus
+from enums import TypeOrderUpdate, UserRole, SheetsPage
 
 
 # (a - 0, b - 1, c - 2, d - 3, e - 4, f - 5, g - 6, h - 7, i - 8, j - 9, k - 10,
@@ -22,7 +22,8 @@ test_table = '12Sm-PMgBy_ANC2WuesE8WWo_sawyaqx4QeMlkWTVfmM'
 async def save_new_order_table(table_id: str) -> str:
     sh = ug.get_google_connect (table_id)
 
-    new_orders = sh.sheet1.get_all_values ()
+    # new_orders = sh.sheet1.get_all_values ()
+    new_orders = sh.worksheet(SheetsPage.BASE.value).get_all_values ()
 
     opr_dict = await ug.get_company_dict(UserRole.OPR.value)
     dlv_dict = await ug.get_company_dict(UserRole.DLV.value)
@@ -148,7 +149,9 @@ async def save_new_order_table(table_id: str) -> str:
 # сохраняет таблицу отчётов
 async def save_new_report_table(table_id: str = None) -> None:
     sh = ug.get_google_connect (table_id)
-    table = sh.get_worksheet (Config.report_sheet_num).get_all_values ()
+    # table = sh.get_worksheet (Config.report_sheet_num).get_all_values ()
+    table = sh.worksheet(SheetsPage.REPORT.value).get_all_values ()
+
     counter = 4
     for row in table [4:]:
         counter += 1
@@ -185,7 +188,9 @@ async def update_google_table(user_id: int) -> None:
     sh = ug.get_google_connect()
 
     # основные параметры
-    new_orders = sh.get_worksheet(1).get_all_values()
+    # new_orders = sh.get_worksheet(1).get_all_values()
+    new_orders = sh.worksheet(SheetsPage.EDIT.value).get_all_values ()
+
     last_row = await db.get_max_row_num()
     new_row = last_row + 1 if last_row else 5
 
@@ -303,7 +308,9 @@ async def update_google_table(user_id: int) -> None:
     if exception_list:
         try:
             cell = f'a2:ah{len(exception_list) + 1}'
-            sh.get_worksheet(1).update(cell, exception_list)
+            # sh.get_worksheet(1).update(cell, exception_list)
+            sh.worksheet(SheetsPage.EDIT.value).update(cell, exception_list)
+
         except Exception as ex:
             log_error(message=f'Ошибка при возвращении ошибок таблицы: {ex}\n\n'
                               f'{exception_list}', with_traceback=False)
@@ -337,35 +344,42 @@ async def update_google_row() -> None:
                     str(order.y).lower() if order.y else '', str(order.z).lower() if order.z else ''
                 ]
             ]
-            sh.sheet1.update (cell, new_row_str)
+            # sh.sheet1.update (cell, new_row_str)
+            sh.worksheet(SheetsPage.BASE.value).update (cell, new_row_str)
             ab = order.ab if order.ab else ''
-            sh.sheet1.update(f'AB{order.row_num}', [[ab]])
+            # sh.sheet1.update(f'AB{order.row_num}', [[ab]])
+            sh.worksheet(SheetsPage.BASE.value).update(f'AB{order.row_num}', [[ab]])
             if order.type_update == TypeOrderUpdate.STATE.value:
                 color = ug.choice_color(order.g)
                 cell_form = f'E{order.row_num}:G{order.row_num}'
-                sh.sheet1.format(cell_form, {"backgroundColor": color})
+                # sh.sheet1.format(cell_form, {"backgroundColor": color})
+                sh.worksheet(SheetsPage.BASE.value).format(cell_form, {"backgroundColor": color})
 
             # изменяет стоимость заказа
             elif order.type_update == TypeOrderUpdate.EDIT_COST.value:
                 color = {"red": 1.0, "green": 0.0, "blue": 0.0}
                 # sh.sheet1.update(f'AB{order.row_num}', [[order.ab]])
-                sh.sheet1.format(f'AB{order.row_num}', {"backgroundColor": color})
+                # sh.sheet1.format(f'AB{order.row_num}', {"backgroundColor": color})
+                sh.worksheet(SheetsPage.BASE.value).format(f'AB{order.row_num}', {"backgroundColor": color})
 
             # изменяет стоимость доставки
             elif order.type_update == TypeOrderUpdate.EDIT_COST_DELIVERY.value:
                 color = {"red": 2.0, "green": 0.0, "blue": 0.0}
                 # sh.sheet1.update(f'AB{order.row_num}', [[order.ab]])
-                sh.sheet1.format(f'AB{order.row_num}', {"backgroundColor": color})
-                
+                # sh.sheet1.format(f'AB{order.row_num}', {"backgroundColor": color})
+                sh.worksheet(SheetsPage.BASE.value).format(f'AB{order.row_num}', {"backgroundColor": color})
+
             elif order.type_update == TypeOrderUpdate.ADD_OPR.value:
                 col = {"red": 0.0, "green": 1.0, "blue": 1.0}
                 # sh.sheet1.update (f'AB{order.row_num}', [[order.ab]])
                 cell = f'J{order.row_num}:Z{order.row_num}'
-                sh.sheet1.format (cell, {"backgroundColor": col})
+                # sh.sheet1.format (cell, {"backgroundColor": col})
+                sh.worksheet(SheetsPage.BASE.value).format (cell, {"backgroundColor": col})
 
                 color = ug.choice_color(order.g)
                 cell_form = f'E{order.row_num}:G{order.row_num}'
-                sh.sheet1.format(cell_form, {"backgroundColor": color})
+                # sh.sheet1.format(cell_form, {"backgroundColor": color})
+                sh.worksheet(SheetsPage.BASE.value).format(cell_form, {"backgroundColor": color})
 
             # elif order.type_update == TypeOrderUpdate.UPDATE_ROW.value:
             #     sh.sheet1.update(f'AB{order.row_num}', [[order.ab]])
@@ -399,7 +413,8 @@ async def update_google_row() -> None:
                     ]
                 ]
 
-                sh.get_worksheet(Config.report_sheet_num).update(cell, new_row_str)
+                # sh.get_worksheet(Config.report_sheet_num).update(cell, new_row_str)
+                sh.worksheet(SheetsPage.REPORT.value).update(cell, new_row_str)
                 await db.update_expenses_dlv(entry_id=new_row.id, updated=True)
             except Exception as ex:
                 log_error(f'Не получилось обновить отчёт {new_row.m} {new_row.n}', with_traceback=False)

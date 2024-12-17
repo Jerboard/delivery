@@ -7,6 +7,12 @@ class UserRole(str, Enum):
     OWN = 'own'
 
 
+class SheetsPage(str, Enum):
+    BASE = 'Заказы'
+    EDIT = 'Новые Заказы'
+    REPORT = 'Отчет Курьера'
+
+
 class OrderStatus(str, Enum):
     NEW = 'new'
     SUC = 'success'
